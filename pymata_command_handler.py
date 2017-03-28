@@ -695,13 +695,8 @@ class PyMataCommandHandler(threading.Thread):
             print(str1)
             print('Errore di traduzione float... skipping line')
             return
-        self.graph_data.append(values)
+        self.pymata.graph_data.append(values)
         #print values
-
-
-    def print_graph(self):
-        data = [[ x[i] for x in self.graph_data ] for i in range(len(self.graph_data[0]))]
-        return (data, plt)
 
     def i2c_reply(self, data):
         """

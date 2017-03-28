@@ -192,6 +192,9 @@ class PyMata:
             if self.verbose:
                 print('\nPlease wait while Arduino is being detected. This can take up to 30 seconds ...')
 
+            # Variables for plotting sensor data or other values
+            self.graph_data = []
+
             # perform board auto discovery
             if not self._command_handler.auto_discover_board(self.verbose):
                 # board was not found so shutdown
@@ -871,3 +874,7 @@ class PyMata:
         var1 = value & 0x7f
         var2 = value >> 7
         self._command_handler.send_sysex(0x17, [var0,var1,var2])
+
+    def print_graph(self):
+        data = [[ x[i] for x in self.graph_data ] for i in range(len(self.graph_data[0]))]
+        return (data, plt)
