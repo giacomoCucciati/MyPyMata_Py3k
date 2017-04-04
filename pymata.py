@@ -875,6 +875,3 @@ class PyMata:
         var2 = value >> 7
         self._command_handler.send_sysex(0x17, [var0,var1,var2])
 
-    def print_graph(self):
-        data = [[ x[i] for x in self.graph_data ] for i in range(len(self.graph_data[0]))]
-        return (data, plt)
