@@ -859,25 +859,25 @@ class PyMata:
         data = [self.STEPPER_LIBRARY_VERSION]
         self._command_handler.send_sysex(self._command_handler.STEPPER_DATA, data)
    
-    def send_single_value(self,value):
+    def set_value_toAll(self,value):
         var1 = value & 0x7f
         var2 = value >> 7
         self._command_handler.send_sysex(0x12, [var1,var2])
 
-    def send_single_pedestal(self,value):
+    def set_pedestal_toAll(self,value):
         var1 = value & 0x7f
         var2 = value >> 7
         self._command_handler.send_sysex(0x1a, [var1,var2])
 
-    def send_pedestal_motor(self,value):
+    def set_value_toSingle(self,motor,value):
+        var0 = motor
+        var1 = value & 0x7f
+        var2 = value >> 7
+        self._command_handler.send_sysex(0x17, [var0,var1,var2])    
+
+    def set_pedestal_toSingle(self,motor,value):
         var0 = motor
         var1 = value & 0x7f
         var2 = value >> 7
         self._command_handler.send_sysex(0x1b, [var0,var1,var2])
-
-    def send_single_motor(self,motor,value):
-        var0 = motor
-        var1 = value & 0x7f
-        var2 = value >> 7
-        self._command_handler.send_sysex(0x17, [var0,var1,var2])
 
