@@ -793,8 +793,18 @@ class PyMataCommandHandler(threading.Thread):
                     dispatch_entry = self.command_dispatch.get(sysex_command)
 
                     # get a "pointer" to the method that will process this command
-                    method = dispatch_entry[0]
-
+                    try:
+                        method = dispatch_entry[0]
+                    except TypeError:
+                        print("Errore method")
+                        end_of_sysex = False
+                        while not end_of_sysex:
+                            # wait for more data to arrive
+                            while len(self.pymata.command_deque) == 0:
+                                pass
+                            data = self.pymata.command_deque.popleft()
+                            if data == self.END_SYSEX:
+                                end_of_sysex = True
                     # now get the rest of the data excluding the END_SYSEX byte
                     end_of_sysex = False
                     while not end_of_sysex:
@@ -834,8 +844,19 @@ class PyMataCommandHandler(threading.Thread):
                     dispatch_entry = self.command_dispatch.get(data)
 
                     # this calls the method retrieved from the dispatch table
-                    method = dispatch_entry[0]
-
+                    try:
+                        method = dispatch_entry[0]
+                    except TypeError:
+                        print("Errore method " + str(data))
+                        end_of_sysex = False
+                        while not end_of_sysex:
+                            # wait for more data to arrive
+                            while len(self.pymata.command_deque) == 0:
+                                pass
+                            data = self.pymata.command_deque.popleft()
+                            if data == self.END_SYSEX:
+                                end_of_sysex = True
+                        continue
                     # get the number of parameters that this command provides
                     num_args = dispatch_entry[1]
 
