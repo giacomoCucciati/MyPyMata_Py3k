@@ -881,3 +881,7 @@ class PyMata:
         var2 = value >> 7
         self._command_handler.send_sysex(0x1b, [var0,var1,var2])
 
+    def sendPing(self):
+        while (self.transport.arduino.outWaiting() > 0):
+            time.sleep(0.5)
+        self._command_handler.send_sysex(0x1e)
