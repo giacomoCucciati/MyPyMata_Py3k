@@ -246,8 +246,8 @@ class PyMata:
         """
         Send a Firmata capability query message via sysex. Client retrieves the results with a
         call to get_capability_query_results()
-        The Arduino can be rather slow in responding to this command. For 
-        the Mega 2560 R3 it has taken up to 25 seconds for a response.   
+        The Arduino can be rather slow in responding to this command. For
+        the Mega 2560 R3 it has taken up to 25 seconds for a response.
         """
         self._command_handler.send_sysex(self._command_handler.CAPABILITY_QUERY, None)
 
@@ -858,26 +858,31 @@ class PyMata:
         """
         data = [self.STEPPER_LIBRARY_VERSION]
         self._command_handler.send_sysex(self._command_handler.STEPPER_DATA, data)
-   
+
     def set_value_toAll(self,value):
-        var1 = value & 0x7f
-        var2 = value >> 7
-        self._command_handler.send_sysex(0x12, [var1,var2])
+        myvar = create_MIDI_vars(value)
+        self._command_handler.send_sysex(0x12, myvar)
 
     def set_pedestal_toAll(self,value):
-        var1 = value & 0x7f
-        var2 = value >> 7
-        self._command_handler.send_sysex(0x1a, [var1,var2])
+        myvar = create_MIDI_vars(value)
+        self._command_handler.send_sysex(0x1a, myvar)
 
     def set_value_toSingle(self,motor,value):
-        var0 = motor
-        var1 = value & 0x7f
-        var2 = value >> 7
-        self._command_handler.send_sysex(0x17, [var0,var1,var2])    
+        myvar = create_MIDI_vars(value)
+        self._command_handler.send_sysex(0x17, [motor] + myvar)
 
     def set_pedestal_toSingle(self,motor,value):
-        var0 = motor
-        var1 = value & 0x7f
-        var2 = value >> 7
-        self._command_handler.send_sysex(0x1b, [var0,var1,var2])
+        myvar = create_MIDI_vars(value)
+        self._command_handler.send_sysex(0x1b, [motor] + myvar)
 
+    def set_dump_parameter(self,value):
+        myvar = create_MIDI_vars(value)
+        self._command_handler.send_sysex(0x1d, myvar)
+
+    def create_MIDI_vars(self,var_init):
+        var = []
+        numMIDIsections = int(sys.getsizeof(var_init)/7)
+        for section in numMIDIsections:
+            var.append(var_init & 0x7f)
+            var_init >> 7
+        return var
