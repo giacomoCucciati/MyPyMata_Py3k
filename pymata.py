@@ -871,6 +871,11 @@ class PyMata:
         myvar = create_MIDI_vars(value)
         self._command_handler.send_sysex(0x17, [motor] + myvar)
 
+    def sendPing(self):
+        while (self.transport.arduino.outWaiting() > 0):
+            time.sleep(0.5)
+        self._command_handler.send_sysex(0x1e)
+
     def set_pedestal_toSingle(self,motor,value):
         myvar = create_MIDI_vars(value)
         self._command_handler.send_sysex(0x1b, [motor] + myvar)
