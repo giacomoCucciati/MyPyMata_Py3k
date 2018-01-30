@@ -860,15 +860,15 @@ class PyMata:
         self._command_handler.send_sysex(self._command_handler.STEPPER_DATA, data)
 
     def set_value_toAll(self,value):
-        myvar = create_MIDI_vars(value)
+        myvar = self.create_MIDI_vars(value)
         self._command_handler.send_sysex(0x12, myvar)
 
     def set_pedestal_toAll(self,value):
-        myvar = create_MIDI_vars(value)
+        myvar = self.create_MIDI_vars(value)
         self._command_handler.send_sysex(0x1a, myvar)
 
     def set_value_toSingle(self,motor,value):
-        myvar = create_MIDI_vars(value)
+        myvar = self.create_MIDI_vars(value)
         self._command_handler.send_sysex(0x17, [motor] + myvar)
 
     def sendPing(self):
@@ -877,17 +877,17 @@ class PyMata:
         self._command_handler.send_sysex(0x1e)
 
     def set_pedestal_toSingle(self,motor,value):
-        myvar = create_MIDI_vars(value)
+        myvar = self.create_MIDI_vars(value)
         self._command_handler.send_sysex(0x1b, [motor] + myvar)
 
     def set_dump_parameter(self,value):
-        myvar = create_MIDI_vars(value)
+        myvar = self.create_MIDI_vars(value)
         self._command_handler.send_sysex(0x1d, myvar)
 
     def create_MIDI_vars(self,var_init):
         var = []
         numMIDIsections = int(sys.getsizeof(var_init)/7)
-        for section in numMIDIsections:
+        for section in range(numMIDIsections):
             var.append(var_init & 0x7f)
             var_init >> 7
         return var
